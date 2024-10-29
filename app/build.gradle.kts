@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.apollo)
 }
 
 android {
@@ -55,6 +56,17 @@ android {
     hilt {
         enableAggregatingTask = false
     }
+
+    apollo {
+        service("service") {
+            packageName.set("com.wk.apollographql")
+        }
+    }
+    /* apollo {
+        // instruct the compiler to generate Kotlin models
+        generateKotlinModels.set(true)
+        packageNamesFromFilePaths()
+    }*/
 }
 
 dependencies {
@@ -81,4 +93,14 @@ dependencies {
 
     //Timber for logs
     implementation(libs.timber)
+
+    //Apollo-3
+    implementation(libs.apollo.runtime)
+
+    //http interceptor
+    implementation(libs.logging.interceptor)
+
+    //hilt navigation compose + lifecycle
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 }

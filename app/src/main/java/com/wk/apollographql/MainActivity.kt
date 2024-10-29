@@ -11,37 +11,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.wk.apollographql.presentation.CountriesViewModel
+import com.wk.apollographql.presentation.HomeScreen
 import com.wk.apollographql.ui.theme.ApolloGraphQlTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ApolloGraphQlTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val countriesViewModel: CountriesViewModel = hiltViewModel()
+                val countries = countriesViewModel.state.collectAsStateWithLifecycle().value
+                HomeScreen(
+                    state = countries,
+                    onSelectCountry = countriesViewModel::selectCountry,
+                    onDismissCountryDialog = countriesViewModel::dismissCountryDialog
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ApolloGraphQlTheme {
-        Greeting("Android")
     }
 }
